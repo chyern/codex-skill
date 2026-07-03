@@ -1,54 +1,54 @@
-# DingTalk Editor UI Reference
+# 钉钉文档编辑器界面参考
 
-Use this reference for browser-based editing of DingTalk documents at `alidocs.dingtalk.com`.
+本文件用于在 `alidocs.dingtalk.com` 中操作钉钉文档 Web 编辑器。
 
-## Editor Surface
+## 编辑器界面
 
-- The main document editor is usually inside `iframe#wiki-doc-iframe`.
-- The iframe toolbar can expose: `菜单`, `插入`, `AI 创作`, paragraph style controls such as `默认` and `正文`, plus `添加图标`, `添加封面`, and `设置文档信息`.
-- The blank editor placeholder can show `输入“/”插入或`.
-- Use iframe-scoped selectors and text checks when automating.
+- 文档正文通常位于 `iframe#wiki-doc-iframe`。
+- iframe 工具栏可见入口包括：`菜单`、`插入`、`默认`、`正文`、`添加图标`、`添加封面`、`设置文档信息`。
+- 空白正文占位提示可能显示 `输入“/”插入或`。
+- 自动化时优先使用 iframe-scoped selector 和文本检查。
 
-Example read:
+读取示例：
 
 ```js
 const frame = tab.playwright.frameLocator('#wiki-doc-iframe');
 const text = await frame.locator('body').innerText({ timeoutMs: 5000 });
 ```
 
-## Insert Menu
+## 插入菜单
 
-Open toolbar `插入` to access native document blocks. Observed groups and items:
+打开工具栏 `插入` 可访问钉钉文档原生块。已验证分组和项目：
 
 - `基础 / 通用`: `图片`, `表格`, `文件`, `同步块`, `代码块`, `在线文档`, `模板内容`, `表情`, `标签`, `公式`
 - `样式布局`: `高亮块`, `分栏`, `分割线`, `素材库`
 - `数据`: `电子表格`
 - `画板图形`: `白板`, `脑图`, `路线图`, `流程图`, `文本绘图`
-- `团队协作`: `提及人`, `群聊`, `Agoal`, `钉钉日程`, `视频会议`, `AI 听记`, `知识库`, `信息收集`, `投票`
+- `团队协作`: `提及人`, `群聊`, `Agoal`, `钉钉日程`, `视频会议`, `知识库`, `信息收集`, `投票`
 - `项目管理`: `项目任务`, `项目看板`
 - `小工具`: `目录`, `表态`, `日期`, `投屏`, `计时器`, `倒计时`, `手写签名`, `模板按钮`, `内嵌网页`, `三方应用`, `企业内应用`
 
-Some visible shortcut hints can collide, for example `图片`, `投票`, and `投屏` may all show `/tp`. Prefer full Chinese keywords in slash commands.
+部分可见快捷提示会冲突，例如 `图片`、`投票`、`投屏` 都可能显示 `/tp`。斜杠命令优先使用中文完整项名。
 
-## Add A Table
+## 添加表格
 
-For the full table insertion and modification workflow, read `quick-operations.md`.
+完整表格插入和修改流程见 `quick-operations.md`。
 
-Use one of these paths:
+使用以下路径之一：
 
-1. Toolbar path:
-   - Click the target insertion point in the document body.
-   - Click `插入`.
-   - Choose `表格` under `基础 / 通用`.
-   - If a size picker appears, select the required rows and columns.
+1. 工具栏路径：
+   - 点击正文中的目标插入点。
+   - 点击 `插入`。
+   - 在 `基础 / 通用` 下选择 `表格`。
+   - 如果出现尺寸选择器，选择需要的行列数。
 
-2. Slash-command path:
-   - Click the target insertion point in the document body.
-   - Type `/表格`.
-   - Choose the visible command named `表格`.
-   - Confirm the table size if prompted.
+2. 斜杠命令路径：
+   - 点击正文中的目标插入点。
+   - 输入 `/表格`。
+   - 选择可见命令 `表格`。
+   - 如果提示选择尺寸，确认行列数。
 
-To fill a table from data:
+用数据填充表格时：
 
 ```text
 列一	列二	列三
@@ -56,25 +56,25 @@ To fill a table from data:
 值 4	值 5	值 6
 ```
 
-- Prepare tab-separated values for rows and columns.
-- Insert the table first when an exact grid is required.
-- Click the top-left target cell and paste the TSV block.
-- Verify that each value landed in the intended cell. If DingTalk pastes into one cell, fill cells manually with `Tab` navigation.
+- 准备 TSV，即行列用制表符分隔。
+- 如果需要精确网格，先插入表格。
+- 点击左上角目标单元格并粘贴 TSV。
+- 验证每个值是否落在目标单元格。如果钉钉把内容粘到一个单元格中，改用 `Tab` 逐格填写。
 
-## Add Long Structured Content
+## 添加长结构化内容
 
-- Draft content as Markdown when possible: headings, bullet lists, numbered lists, task lists, block quotes, and fenced code blocks.
-- Paste into the editor body for bulk content creation.
-- Use native insert blocks after the paste for components that Markdown cannot reliably represent, such as DingTalk tables, flowcharts, project tasks, dates, mentions, and embedded webpages.
-- After pasting, check that heading levels, lists, and code blocks rendered correctly.
+- 尽量先生成 Markdown：标题、项目列表、编号列表、任务列表、引用块和 fenced code block。
+- 批量创建内容时粘贴到正文。
+- Markdown 无法可靠表达的组件，在粘贴后使用原生插入块补充，例如钉钉表格、流程图、项目任务、日期、提及人、内嵌网页。
+- 粘贴后检查标题层级、列表和代码块是否正确渲染。
 
-## Modify Existing Content
+## 修改已有内容
 
-For the full quick-read, quick-modify, table, diagram, and code-block workflows, read `quick-operations.md`.
+快速读取、快速修改、表格、图形和代码块流程见 `quick-operations.md`。
 
-1. Read the current iframe text or inspect the visible area.
-2. Locate the specific heading, paragraph, table, or block to change.
-3. Make the smallest edit that satisfies the request.
-4. Verify the changed text and visible layout.
+1. 读取当前 iframe 文本或检查可见区域。
+2. 定位要修改的标题、段落、表格或块。
+3. 做满足请求的最小修改。
+4. 验证修改后的文本和可见布局。
 
-For risky edits, first produce a short change plan and ask for confirmation if the user did not clearly authorize the document mutation.
+风险较高的编辑，如果用户没有清楚授权文档变更，先给出简短修改计划并确认。
