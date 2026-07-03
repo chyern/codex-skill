@@ -1,56 +1,60 @@
 ---
 name: dingding-doc
-description: Read, generate, edit, format, and operate DingTalk/Alibaba Docs (钉钉文档/阿里文档) in the web editor. Use when the user asks Codex to read or summarize a DingTalk document, quickly modify an alidocs.dingtalk.com page, insert or update tables, insert or update flowcharts/sequence diagrams, insert or update code blocks, convert structured content into DingTalk document content, or provide repeatable DingTalk document editing procedures.
+description: Operate DingTalk/Alibaba Docs (钉钉文档/阿里文档) in the web editor for agent-driven document work. Use when Codex must read, generate, paste, edit, format, or verify an alidocs.dingtalk.com document; convert structured content into DingTalk document content; insert or update tables, flowcharts, sequence diagrams, code blocks, formulas, dates, layout blocks, icons, or covers; or provide repeatable browser procedures for modifying DingTalk documents.
 ---
 
-# 钉钉文档
+# 钉钉文档 Agent 手册
 
-## 核心流程
+## 执行契约
 
-1. 确认目标文档。
-   - 如果用户已经打开 `alidocs.dingtalk.com` 页面，默认使用当前页面作为目标文档，除非用户提供了另一个链接。
-   - 如果用户明确要求修改在线文档，将该请求视为对该文档编辑的授权。如果用户只是要求补充 skill 或询问做法，不要修改在线文档。
-   - 如果登录、权限或 CAPTCHA 阻塞页面，让用户先在浏览器中处理。
+- 由 agent 自己生成、改写和整理内容；不要使用钉钉文档内置 `AI 创作` 或任何 AI 生成入口。
+- 只有用户明确要求修改在线文档时才编辑页面。用户只是询问 skill、流程或能力时，不要改在线文档。
+- 如果用户已经打开 `alidocs.dingtalk.com` 文档，默认把当前页面作为目标文档；用户提供其他链接时再切换。
+- 登录、权限、CAPTCHA 或企业选择阻塞时，让用户在浏览器中处理后再继续。
+- 上传本地文件、选择企业文档、发送外部数据、修改分享/权限前，必须有明确授权。
 
-2. 对在线钉钉文档使用浏览器控制。
-   - 钉钉文档正文通常渲染在 `iframe#wiki-doc-iframe` 中。
-   - 读取正文和执行编辑动作时，优先把操作范围限定在这个 iframe 内。
-   - 外层页面 DOM 可能只暴露导航壳，不要用外层 `document.body.innerText` 判断正文。
+## 基本浏览器模型
 
-3. 选择编辑方式。
-   - 长篇生成内容：先生成干净的 Markdown/纯文本，再粘贴到编辑器，最后检查渲染结果。
-   - 表格、图片、代码块、公式、流程图、任务、日期、内嵌网页等原生块：优先使用钉钉文档的 `插入` 菜单或斜杠命令。
-   - 修改已有内容：保留周边内容，只改用户要求的范围，并检查最终渲染效果。
+- 正文通常在 `iframe#wiki-doc-iframe` 中。读取正文和执行编辑动作时，优先限定在这个 iframe。
+- 不要用外层 `document.body.innerText` 判断正文；外层页面常只暴露导航壳。
+- 用 `innerText` 读取渲染文本；`textContent` 容易混入脚本或隐藏状态。
+- 工具栏文字可见但不一定暴露稳定 `button`/role。点击菜单后必须读取展开项或截图确认；未展开时停止盲目点击，改用中文斜杠命令或请用户手动打开菜单。
 
-4. 每次有意义的修改后都要验证。
-   - 检查 iframe 文本、可见格式，以及 `上次编辑` 一类自动保存状态。
-   - 表格、图形、多栏布局、插入组件等布局敏感内容要用截图辅助确认。
+## 工作流
 
-## 参考资料
+1. 判定任务类型。
+   - 读取/总结文档：读取 iframe 文本，必要时截图确认布局。
+   - 生成文档内容：先生成 Markdown/纯文本草稿，再粘贴到目标位置；表格、图形、代码等用原生块补齐。
+   - 修改已有内容：定位目标段落、标题、表格、图形或代码块，只改用户要求的范围。
+   - 格式化：使用 `正文` 样式菜单设置正文或 `标题1` 到 `标题6`；字体使用 `默认` 字体菜单。
+   - 插入原生块：优先中文斜杠命令，例如 `/表格`、`/代码块`、`/流程图`、`/文本绘图`；菜单路径必须基于当前可见项。
 
-当任务涉及以下操作时，读取 `references/quick-operations.md`：
+2. 选择并读取 reference。
+   - 读写、生成、修改、表格、图形、代码块：读取 `references/quick-operations.md`。
+   - 需要 UI 入口、斜杠命令、插入菜单项名：读取 `references/editor-ui.md`。
+   - 需要已验证能力、标题/正文样式、字体、图标、封面、菜单分类：读取 `references/verified-editor-capabilities.md`。
 
-- 快速读取钉钉文档内容。
-- 快速修改钉钉文档内容。
-- 修改段落格式、章节标题格式和标题层级。
-- 在指定位置插入表格。
-- 修改表格内容。
-- 在指定位置插入流程图或时序图。
-- 修改流程图或时序图内容。
-- 在指定位置插入代码块。
-- 修改代码块内容。
+3. 执行前确认插入点或修改范围。
+   - 可接受位置：当前光标、文档末尾、某标题前后、某段文字前后、某个表格单元格、代码块或图形块内部。
+   - 用户没有指定位置时，默认文档末尾或当前光标，但先说明这个假设。
+   - 除非用户明确要求整体重写，否则不要整篇替换已有文档。
 
-当任务需要插入菜单项名称、iframe 结构或编辑器界面细节时，读取 `references/editor-ui.md`。
+4. 生成可粘贴载荷。
+   - 长篇内容：Markdown/纯文本，保持标题、列表、引用和 fenced code block。
+   - 表格：先准备 TSV；需要原生表格时先插表再粘 TSV。
+   - 流程图/时序图：优先原生 `流程图` 或 `文本绘图`；不可用时插入 Mermaid 源码代码块并说明是源码 fallback。
+   - 代码：使用代码块，粘贴完整代码，避免逐字符输入。
 
-当任务需要设置标题/正文样式、字体、图片/文件/公式/日期/目录/分割线/高亮块/分栏等常用编辑能力，或需要使用 `菜单`、`添加图标`、`添加封面` 等入口时，读取 `references/verified-editor-capabilities.md`。该文件只记录已在内置浏览器中验证过的非 AI 编辑入口。
+5. 修改后必须验收。
+   - 读取 iframe 文本确认内容。
+   - 用截图确认标题层级、表格边界、代码块、图形、分栏、高亮块等布局敏感内容。
+   - 检查自动保存状态，例如 `已保存` 或 `上次编辑`。
+   - 如果验证结果与预期不一致，修正后再次验收；不能确定时说明不确定点。
 
-## 实用规则
+## 关键规则
 
-- 斜杠命令优先使用中文完整命令名，例如 `/表格`，不要优先使用可能冲突的短别名。
-- 不要依赖外层页面的 `document.body.innerText` 读取正文；要检查编辑器 iframe。
-- 除非用户明确要求整体重写，否则不要整篇替换已有文档。
-- 插入生成内容前，先确定插入位置：标题、当前光标、文档末尾、某个标题前后，或某个表格单元格内。
-- UI 菜单打开后，读取可见菜单文本并选择精确项名。钉钉文档的 CSS class 可能频繁变化。
-- 工具栏文字可见但不一定暴露稳定的 button/role；如果文本定位或坐标点击不能展开菜单，停止盲目点击，改用截图确认状态、斜杠命令或请用户把光标/菜单打开到目标位置。
-- 不要把未在当前页面验证过的菜单项写成确定能力。先在内置浏览器打开并读取可见文本，再补充或执行。
-- 不使用钉钉文档内置 `AI 创作` 能力；这个 skill 只指导 agent 直接读取、编辑和修改钉钉文档。
+- 不要把未在当前页面验证过的菜单项写成确定能力或直接执行。
+- 菜单项打开后，选择精确可见文本；不要依赖 CSS class 或猜测坐标。
+- 中文斜杠命令优先用完整名称，避免 `/tp` 这类短别名冲突。
+- 保留周边内容和文档结构；批量修改前先列出目标项。
+- 对高风险操作先给简短计划并确认：整篇替换、删除大块内容、替换整张表、上传文件、改封面/图标、修改权限。

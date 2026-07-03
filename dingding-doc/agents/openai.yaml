@@ -1,7 +1,7 @@
 interface:
   display_name: "DingDing Doc"
-  short_description: "生成和修改钉钉文档的浏览器操作手册"
-  default_prompt: "Use $dingding-doc 帮我读取、生成或修改一个钉钉文档。"
+  short_description: "面向 agent 的钉钉文档生成、修改、格式化与验收手册"
+  default_prompt: "Use $dingding-doc 帮我在当前钉钉文档中生成、修改或格式化内容。"
 
 policy:
   allow_implicit_invocation: true
