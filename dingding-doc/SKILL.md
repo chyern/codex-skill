@@ -1,6 +1,6 @@
 ---
 name: dingding-doc
-description: Operate DingTalk/Alibaba Docs (钉钉文档/阿里文档) in the web editor for agent-driven document work. Use when Codex must read, generate, paste, edit, format, or verify an alidocs.dingtalk.com document; convert structured content into DingTalk document content; insert or update tables, flowcharts, sequence diagrams, code blocks, formulas, dates, layout blocks, icons, or covers; or provide repeatable browser procedures for modifying DingTalk documents.
+description: Operate DingTalk/Alibaba Docs (钉钉文档/阿里文档) in the web editor for agent-driven document work. Use when Codex must read, generate, paste, edit, format, or verify an alidocs.dingtalk.com document; convert structured content into DingTalk document content; insert or update tables, images, files, formulas, spreadsheets, sync blocks, template content, flowcharts, sequence diagrams, code blocks, dates, directories, layout blocks, project/task widgets, collaboration widgets, embedded web pages, icons, or covers; or provide repeatable browser procedures for modifying DingTalk documents.
 ---
 
 # 钉钉文档 Agent 手册
@@ -28,9 +28,11 @@ description: Operate DingTalk/Alibaba Docs (钉钉文档/阿里文档) in the we
    - 修改已有内容：定位目标段落、标题、表格、图形或代码块，只改用户要求的范围。
    - 格式化：使用 `正文` 样式菜单设置正文或 `标题1` 到 `标题6`；字体使用 `默认` 字体菜单。
    - 插入原生块：优先中文斜杠命令，例如 `/表格`、`/代码块`、`/流程图`、`/文本绘图`；菜单路径必须基于当前可见项。
+   - 插入协作或外部组件：先判断是否会上传、发送、关联企业数据或影响协作者，再决定是否需要再次确认。
 
 2. 选择并读取 reference。
    - 读写、生成、修改、表格、图形、代码块：读取 `references/quick-operations.md`。
+   - 需要图片、文件、在线文档、同步块、模板内容、公式、日期、目录、分栏、高亮块、电子表格、提及人、日程、投票、任务、看板、内嵌网页等插入组件：读取 `references/insert-components.md`。
    - 需要 UI 入口、斜杠命令、插入菜单项名：读取 `references/editor-ui.md`。
    - 需要已验证能力、标题/正文样式、字体、图标、封面、菜单分类：读取 `references/verified-editor-capabilities.md`。
 
@@ -44,6 +46,7 @@ description: Operate DingTalk/Alibaba Docs (钉钉文档/阿里文档) in the we
    - 表格：先准备 TSV；需要原生表格时先插表再粘 TSV。
    - 流程图/时序图：优先原生 `流程图` 或 `文本绘图`；不可用时插入 Mermaid 源码代码块并说明是源码 fallback。
    - 代码：使用代码块，粘贴完整代码，避免逐字符输入。
+   - 组件：先准备用户提供的文件、链接、人员、日期或任务字段；缺少必要输入时先问用户。
 
 5. 修改后必须验收。
    - 读取 iframe 文本确认内容。
