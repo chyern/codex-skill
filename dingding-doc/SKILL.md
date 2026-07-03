@@ -35,6 +35,7 @@ description: Operate DingTalk/Alibaba Docs (钉钉文档/阿里文档) in the we
    - 需要图片、文件、在线文档、同步块、模板内容、公式、日期、目录、分栏、高亮块、电子表格、提及人、日程、投票、任务、看板、内嵌网页等插入组件：读取 `references/insert-components.md`。
    - 需要 UI 入口、斜杠命令、插入菜单项名：读取 `references/editor-ui.md`。
    - 需要已验证能力、标题/正文样式、字体、图标、封面、菜单分类：读取 `references/verified-editor-capabilities.md`。
+   - 需要 Playwright 操作、剪贴板粘贴、插入点定位、选区替换、保存验收或失败恢复：读取 `references/browser-automation.md`。
 
 3. 执行前确认插入点或修改范围。
    - 可接受位置：当前光标、文档末尾、某标题前后、某段文字前后、某个表格单元格、代码块或图形块内部。
@@ -52,6 +53,7 @@ description: Operate DingTalk/Alibaba Docs (钉钉文档/阿里文档) in the we
    - 读取 iframe 文本确认内容。
    - 用截图确认标题层级、表格边界、代码块、图形、分栏、高亮块等布局敏感内容。
    - 检查自动保存状态，例如 `已保存` 或 `上次编辑`。
+   - 如果保存状态不可见，等待后重新读取或刷新确认；仍不能证明已保存时说明不确定点。
    - 如果验证结果与预期不一致，修正后再次验收；不能确定时说明不确定点。
 
 ## 关键规则
